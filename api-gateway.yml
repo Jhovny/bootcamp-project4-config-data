@@ -1,0 +1,33 @@
+server:
+  port: 8090
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    hostname: localhost
+    preferIpAddress: true
+
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: master
+          uri: lb://master
+          predicates:
+            - Path=/api/documenttypes/**, /api/persons/**
+        - id: client
+          uri: lb://client
+          predicates:
+            - Path=/api/clients/**, /api/clienttypes/**
+        - id: product
+          uri: lb://product
+          predicates:
+            - Path=/api/products/**, /api/producttypes/**
+        - id: banking
+          uri: lb://banking
+          predicates:
+            - Path=/api/accounts/**, /api/accountstates/**, /api/holders/**, /api/movements/**, /api/movementtypes/**, /api/signers/**

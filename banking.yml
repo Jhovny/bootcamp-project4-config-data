@@ -1,0 +1,47 @@
+server:
+  port: 8088
+  
+project:
+  url:
+    server:
+      client: http://localhost:8086
+      product: http://localhost:8087
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    hostname: localhost
+    preferIpAddress: true
+    
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/db_bank_banking
+      
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  health:
+    circuitbreakers:
+        enabled: true
+        
+resilience4j.circuitbreaker:
+    configs:
+        default:
+            registerHealthIndicator: true
+            eventConsumerBufferSize: 10
+            slidingWindowType: COUNT_BASED
+            slidingWindowSize: 10
+            failureRateThreshold: 5
+            waitDurationInOpenState: 2s
+            permittedNumberOfCallsInHalfOpenState: 3
+            automaticTransitionFromOpenToHalfOpenEnabled: true
+        createAccountCB:
+            baseConfig: default
